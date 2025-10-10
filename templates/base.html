@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple SNS</title>
+</head>
+<body>
+    <header>
+        <h1><a href="{% url 'post_list' %}">Simple SNS</a></h1>
+        {% if user.is_authenticated %}
+            <p>{{ user.username }} さん |
+               <a href="{% url 'logout' %}">ログアウト</a></p>
+        {% else %}
+            <p><a href="{% url 'login' %}">ログイン</a></p>
+        {% endif %}
+        <hr>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
