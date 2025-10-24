@@ -2,19 +2,13 @@
 
 {% block content %}
   <h2>ログイン</h2>
-
   <form method="post">
     {% csrf_token %}
-
-    {# フォームフィールドを表示 #}
     {{ form.as_p }}
-
     <button type="submit">ログイン</button>
   </form>
 
-  <p>
-    パスワードをお忘れですか？
-    <a href="{% url 'password_reset' %}">こちら</a>
-    </p>
-
-{% endblock content %}
+  <p>まだアカウントをお持ちでない場合は
+    <a href="{% url 'signup' %}">新規登録</a>
+  </p>
+{% endblock %}
