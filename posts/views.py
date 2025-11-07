@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Post
 from .forms import PostForm
-from django.contrib.auth.models import Group  # Groupモデルをインポート
+# Groupモデルは使用しません（投稿のassociated_groupで集計するため）
 
 
 def post_list(request):
@@ -12,20 +12,18 @@ def post_list(request):
     total_group_a_likes = 0
     total_group_b_likes = 0
     
-    try:
-        group_a = Group.objects.get(name='GroupA')
-        group_b = Group.objects.get(name='GroupB')
+    # 全ての投稿をループし、投稿の associated_group に応じていいね数を集計
+    for post in posts:
+        # 投稿のassociated_groupが'A'の場合、その投稿のいいね数をGroupAの総数に加算
+        if post.associated_group == 'A':
+            total_group_a_likes += post.total_likes()
         
-        # 全ての投稿をループし、GroupA/Bユーザーからのいいねをカウントして加算
-        for post in posts:
-            total_group_a_likes += post.likes.filter(groups=group_a).count()
-            total_group_b_likes += post.likes.filter(groups=group_b).count()
+        # 投稿のassociated_groupが'B'の場合、その投稿のいいね数をGroupBの総数に加算
+        elif post.associated_group == 'B':
+            total_group_b_likes += post.total_likes()
             
-    except Group.DoesNotExist:
-        # GroupA または GroupB が存在しない場合は、総数は 0 のまま
-        pass
+    # ---------------------------------
     
-    # 集計結果をコンテキストに追加
     context = {
         'posts': posts,
         'total_group_a_likes': total_group_a_likes,
@@ -36,7 +34,7 @@ def post_list(request):
 
 
 @login_required
-def post_create(request): # ★ 削除されていた関数を復活
+def post_create(request): # ★ 復活
     if request.method == 'POST':
         form = PostForm(request.POST, request.FILES)
         if form.is_valid():
@@ -50,7 +48,7 @@ def post_create(request): # ★ 削除されていた関数を復活
 
 
 @login_required
-def like_post(request, post_id): # ★ 削除されていた関数を復活
+def like_post(request, post_id): # ★ 復活
     post = get_object_or_404(Post, id=post_id)
     if request.user in post.likes.all():
         post.likes.remove(request.user)

@@ -4,4 +4,9 @@ from .models import Post
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content', 'image']  # 投稿本文と画像を入力できるようにする
+        fields = ['content', 'image', 'associated_group'] # ★ associated_group を追加
+        widgets = {
+            'content': forms.Textarea(attrs={'rows': 4}),
+            # ★ associated_group をラジオボタンで表示
+            'associated_group': forms.RadioSelect(), 
+        }

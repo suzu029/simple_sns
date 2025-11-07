@@ -18,7 +18,14 @@
 
   {% for post in posts %}
     <div>
-      <p><strong>{{ post.user.username }}</strong></p>
+      <p>
+        <strong>{{ post.user.username }}</strong>
+        {% if post.associated_group != 'N' %}
+            <span style="font-size: small; color: green; margin-left: 10px;">
+                [対象: {{ post.get_associated_group_display }}]
+            </span>
+        {% endif %}
+      </p>
       
       <p>{{ post.content }}</p>
       {% if post.image %}
