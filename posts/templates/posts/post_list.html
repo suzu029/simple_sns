@@ -3,7 +3,13 @@
 {% block content %}
   <h2>投稿一覧</h2>
 
-  <!-- 新しい投稿ボタン -->
+  <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; background-color: #f9f9f9;">
+    <p style="margin: 0; font-weight: bold;">全投稿のいいね総数 (グループ別)</p>
+    <p style="margin: 5px 0 0 0;">
+      GroupA: <strong>{{ total_group_a_likes }}</strong> いいね
+      / GroupB: <strong>{{ total_group_b_likes }}</strong> いいね
+    </p>
+  </div>
   <p>
     <a href="{% url 'post_create' %}" style="text-decoration:none;">
       📝 投稿
@@ -13,6 +19,7 @@
   {% for post in posts %}
     <div>
       <p><strong>{{ post.user.username }}</strong></p>
+      
       <p>{{ post.content }}</p>
       {% if post.image %}
         <img src="{{ post.image.url }}" width="300">

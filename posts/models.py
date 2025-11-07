@@ -6,10 +6,12 @@ class Post(models.Model):
     content = models.TextField()
     image = models.ImageField(upload_to='images/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)  # ←追加！
+    likes = models.ManyToManyField(User, related_name='liked_posts', blank=True)
 
     def __str__(self):
         return self.content[:20]
 
     def total_likes(self):
         return self.likes.count()  # いいね数を数えるメソッド
+
+# ※ 以前追加された group_a_likes_count および group_b_likes_count のプロパティは削除しました。
