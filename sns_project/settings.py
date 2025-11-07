@@ -132,4 +132,5 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-LOGIN_REDIRECT_URL = 'post_list'
+# LOGIN_REDIRECT_URL = 'post_list' #
+LOGIN_REDIRECT_URL = 'set_user_group'
