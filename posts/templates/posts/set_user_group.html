@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>グループ選択</h2>
+  
+  <p>投稿を作成する前に、あなたの所属するグループを選択してください。</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">グループを決定</button>
+  </form>
+{% endblock %}

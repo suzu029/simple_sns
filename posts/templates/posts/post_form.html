@@ -4,7 +4,24 @@
   <h2>新しい投稿</h2>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{ form.as_p }}
+    
+    <p>
+      {{ form.content.label_tag }}
+      {{ form.content }}
+    </p>
+    
+    <p>
+      {{ form.image.label_tag }}
+      {{ form.image }}
+    </p>
+
+    {% comment %} グループ選択部分を削除
+    <p>
+      <strong>{{ form.associated_group.label_tag }}</strong>
+      <br>
+      {{ form.associated_group }}
+    </p>
+    {% endcomment %}
     <button type="submit">投稿する</button>
   </form>
   <a href="{% url 'post_list' %}">戻る</a>

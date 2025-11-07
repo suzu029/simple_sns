@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-4h_e=^_4k$hm#t-q#@cz61w!kdk3xd6xz4k!2jg2c+wjr!7!&^
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['172.20.10.2', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -132,3 +132,5 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# LOGIN_REDIRECT_URL = 'post_list' #
+LOGIN_REDIRECT_URL = 'set_user_group'
