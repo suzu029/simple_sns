@@ -1,19 +1,16 @@
 from django import forms
-# ★ UserProfileをインポート
 from .models import Post, UserProfile 
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        # ★ associated_group を削除
         fields = ['content', 'image'] 
         widgets = {
             'content': forms.Textarea(attrs={'rows': 4}),
         }
 
-# ★ 新規追加: ユーザーグループ設定フォーム（UpdateViewで利用）
+# ★ 新規追加: ユーザーグループ設定フォーム
 class UserGroupForm(forms.ModelForm):
-    # ログイン時の選択肢は 'N' (None) を除いたものにする
     GROUP_CHOICES_LOGIN = [
         ('A', 'GroupA'),
         ('B', 'GroupB'),

@@ -50,7 +50,6 @@ def post_create(request):
         if form.is_valid():
             post = form.save(commit=False)
             post.user = request.user
-            # 投稿者のUserProfileからグループを取得して設定
             post.associated_group = user_group 
             post.save()
             return redirect('post_list')
@@ -59,24 +58,22 @@ def post_create(request):
     return render(request, 'posts/post_form.html', {'form': form})
 
 
-# ★★★ 新規追加の SetUserGroupView クラス (Class-Based View) ★★★
+
 class SetUserGroupView(LoginRequiredMixin, UpdateView):
     model = UserProfile
     form_class = UserGroupForm
     template_name = 'posts/set_user_group.html'
     success_url = reverse_lazy('post_list')
 
-    # ログインユーザーのUserProfileオブジェクトを取得または新規作成する
+
     def get_object(self, queryset=None):
         try:
             # 既存のプロフィールを取得
             return self.request.user.userprofile
         except UserProfile.DoesNotExist:
-            # プロフィールが存在しない場合、新規作成して返す
             return UserProfile.objects.create(user=self.request.user, associated_group='N')
 
 
-# ★★★ 既存の like_post 関数 ★★★
 @login_required
 def like_post(request, post_id):
     post = get_object_or_404(Post, id=post_id)
