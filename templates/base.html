@@ -1,8 +1,10 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <title>Simple SNS</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
 </head>
 <body>
     <header>
@@ -13,7 +15,6 @@
         {% else %}
             <p><a href="{% url 'login' %}">ログイン</a></p>
         {% endif %}
-        <hr>
     </header>
 
     <main>
