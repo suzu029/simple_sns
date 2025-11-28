@@ -29,11 +29,14 @@
       
       <p>{{ post.content }}</p>
       {% if post.image %}
-        <img src="{{ post.image.url }}" width="300">
+        <img src="{{ post.image.url }}" width="300" 
+             id="post-image-{{ post.id }}" 
+             data-post-id="{{ post.id }}" 
+             style="cursor: pointer;">
       {% endif %}
       <p>❤️ {{ post.total_likes }} いいね</p>
 
-      <form action="{% url 'like_post' post.id %}" method="post">
+      <form action="{% url 'like_post' post.id %}" method="post" id="like-form-{{ post.id }}" style="display: inline;">
         {% csrf_token %}
         {% if user in post.likes.all %}
           <button type="submit">いいね解除</button>
@@ -44,4 +47,29 @@
       <hr>
     </div>
   {% endfor %}
-{% endblock %}
+
+{% if user.is_authenticated %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // すべての投稿画像を取得
+        const postImages = document.querySelectorAll('[id^="post-image-"]');
+
+        postImages.forEach(image => {
+            image.addEventListener('dblclick', function() {
+                // post-idを取得
+                const postId = this.getAttribute('data-post-id');
+                
+                if (postId) {
+                    // 対応する「いいね」フォームを見つけて送信
+                    const likeForm = document.getElementById('like-form-' + postId);
+                    if (likeForm) {
+                        // フォームを送信して「いいね」アクションを実行
+                        likeForm.submit();
+                    }
+                }
+            });
+        });
+    });
+</script>
+{% endif %}
+{% endblock content %}
