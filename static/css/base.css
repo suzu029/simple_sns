@@ -45,7 +45,7 @@ header p {
 
 /* mainコンテンツのレイアウト */
 main {
-    max-width: 760px; /* コンテンツ幅を制限 */
+    max-width: 600px; /* コンテンツ幅を制限 */
     margin: 0 auto;
     padding: 0 15px;
 }
@@ -61,7 +61,7 @@ main > div {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-/* ★修正/追加: 投稿画像の表示サイズを大きくする */
+/* 画像のスタイル調整 */
 main > div img {
     /* max-widthを100%にすることで、親要素（760px）に合わせて最大表示されます */
     max-width: 100%; 
@@ -90,4 +90,11 @@ main > div button {
 
 main > div button:hover {
     background-color: #2980b9;
+}
+
+main > div p span {
+    font-size: 1.1em !important; /* ユーザー名の文字サイズと同じくらいに拡大 */
+    font-weight: bold;
+    margin-left: 10px;
+    color: #27ae60 !important; /* グループ名を濃い緑に */
 }
