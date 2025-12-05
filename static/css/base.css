@@ -72,12 +72,14 @@ main > div {
 /* 画像のスタイル調整 */
 main > div img {
     /* max-widthを100%にすることで、親要素（760px）に合わせて最大表示されます */
-    max-width: 100%; 
+    max-width: 30%; 
     height: auto;
     border-radius: 4px;
     margin: 10px 0;
     display: block;
 }
+
+
 
 /* ユーザー名のフォントサイズを調整 */
 main > div strong {
@@ -105,4 +107,10 @@ main > div p span {
     font-weight: bold;
     margin-left: 10px;
     color: #27ae60 !important; /* グループ名を濃い緑に */
+}
+
+
+main img {
+    max-width: 100% !important;
+    height: auto !important;
 }

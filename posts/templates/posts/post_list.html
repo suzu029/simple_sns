@@ -1,4 +1,39 @@
-{% for post in posts %}
+{% extends "base.html" %}
+
+{% block content %}
+  {% load static %}
+  
+  {% if user.is_authenticated %}
+    <p>
+      <a href="{% url 'post_create' %}" style="
+          display: inline-block;
+          background-color: #3498db;
+          color: white;
+          padding: 10px 15px;
+          border-radius: 5px;
+          text-decoration: none;
+          margin-bottom: 20px;
+          font-weight: bold;
+      ">
+        新規投稿
+      </a>
+    </p>
+
+    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+        <h3 style="margin-top: 0; color: #1abc9c; font-size: 1.2em;">現在のいいね集計</h3>
+        <p style="margin: 5px 0;">
+            <strong>全体総数:</strong> {{ total_group_a_likes | add:total_group_b_likes }} いいね
+        </p>
+        <p style="margin: 5px 0; color: #3499db;">
+            <strong>{{ group_a_display_name }}:</strong> {{ total_group_a_likes }} いいね
+        </p>
+        <p style="margin: 5px 0; color: #e74c3c;">
+            <strong>{{ group_b_display_name }}:</strong> {{ total_group_b_likes }} いいね
+        </p>
+    </div>
+    {% endif %}
+
+  {% for post in posts %}
     <div>
       <p>
         <strong>{{ post.user.username }}</strong>
@@ -50,6 +85,7 @@
 
     // Ajaxでいいね/いいね解除を行う共通関数
     function toggleLike(postId) {
+        // postIdをURLに挿入するために、ダミーのID (999999) を使用してURLを生成
         const url = `{% url 'like_post' 999999 %}`.replace('999999', postId);
         const csrfToken = getCookie('csrftoken');
 
@@ -60,11 +96,11 @@
                 'Content-Type': 'application/json',
                 'X-Requested-With': 'XMLHttpRequest'
             },
+            // POSTリクエストだが、ボディは空でOK
             body: JSON.stringify({})
         })
         .then(response => {
             if (!response.ok) {
-                // HTTPエラー（404, 500など）
                 throw new Error('Network response was not ok');
             }
             return response.json();
@@ -87,6 +123,10 @@
                         likeButtonElement.textContent = 'いいね';
                     }
                 }
+                // ★追加: 集計値を再取得するためにページをリロードする代わりに、
+                // 非同期でページ上の集計部分を更新するロジックをここに追加できますが、
+                // 今回はシンプルにページ上部のいいね総数表示を更新する機能は省略します。
+                // （本格的な更新はページリロードなしでは複雑になるため）
             } else {
                 console.error('いいねの更新に失敗しました:', data);
                 alert('いいねの更新に失敗しました。');
@@ -111,7 +151,7 @@
             });
         });
 
-        // 2. 画像ダブルクリックイベントの処理 (既存の処理をAjaxに変更)
+        // 2. 画像ダブルクリックイベントの処理 
         const postImages = document.querySelectorAll('[id^="post-image-"]');
         postImages.forEach(image => {
             image.addEventListener('dblclick', function() {
@@ -124,3 +164,4 @@
     });
 </script>
 {% endif %}
+{% endblock %}
