@@ -1,37 +1,4 @@
-{% extends "base.html" %}
-
-{% block content %}
-  <h2>投稿一覧</h2>
-
-  {% if messages %}
-    <ul class="messages" style="list-style: none; padding: 0;">
-        {% for message in messages %}
-            <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: green;">{{ message }}</li>
-        {% endfor %}
-    </ul>
-  {% endif %}
-
-  <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; background-color: #f9f9f9;">
-    <p style="margin: 0; font-weight: bold;">全投稿のいいね総数 (グループ別)</p>
-    <p style="margin: 5px 0 0 0;">
-      {{ group_a_display_name }}: <strong>{{ total_group_a_likes }}</strong> いいね
-      / {{ group_b_display_name }}: <strong>{{ total_group_b_likes }}</strong> いいね
-    </p>
-  </div>
-  <p>
-    <a href="{% url 'post_create' %}" style="text-decoration:none;">
-      📝 投稿
-    </a>
-    <span style="margin: 0 10px;">|</span>
-   <!-- <a href="{% url 'set_user_group' %}" style="text-decoration:none;">
-      👥 グループ選択 
-    </a>
-    <span style="margin: 0 10px;">|</span>
-    <a href="{% url 'group_name_setting' %}" style="text-decoration:none;">
-      🖋️ グループ名変更 </a>
-  </p> -->
-
-  {% for post in posts %}
+{% for post in posts %}
     <div>
       <p>
         <strong>{{ post.user.username }}</strong>
@@ -49,42 +16,111 @@
              data-post-id="{{ post.id }}" 
              style="cursor: pointer;">
       {% endif %}
-      <p>❤️ {{ post.total_likes }} いいね</p>
+      <p>❤️ <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span> いいね</p>
 
-      <form action="{% url 'like_post' post.id %}" method="post" id="like-form-{{ post.id }}" style="display: inline;">
+      <form action="{% url 'like_post' post.id %}" method="post" class="like-form" data-post-id="{{ post.id }}" style="display: inline;">
         {% csrf_token %}
         {% if user in post.likes.all %}
-          <button type="submit">いいね解除</button>
+          <button type="submit" id="like-button-{{ post.id }}">いいね解除</button>
         {% else %}
-          <button type="submit">いいね</button>
+          <button type="submit" id="like-button-{{ post.id }}">いいね</button>
         {% endif %}
       </form>
       <hr>
     </div>
   {% endfor %}
 
-{% if user.is_authenticated %}
+  {% if user.is_authenticated %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // すべての投稿画像を取得
-        const postImages = document.querySelectorAll('[id^="post-image-"]');
+    // CSRFトークンを取得するヘルパー関数
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
+    // Ajaxでいいね/いいね解除を行う共通関数
+    function toggleLike(postId) {
+        const url = `{% url 'like_post' 999999 %}`.replace('999999', postId);
+        const csrfToken = getCookie('csrftoken');
+
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrfToken,
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({})
+        })
+        .then(response => {
+            if (!response.ok) {
+                // HTTPエラー（404, 500など）
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'ok') {
+                // DOMを更新
+                const likeCountElement = document.getElementById(`like-count-${postId}`);
+                const likeButtonElement = document.getElementById(`like-button-${postId}`);
+                
+                if (likeCountElement) {
+                    likeCountElement.textContent = data.total_likes;
+                }
+                
+                if (likeButtonElement) {
+                    // ボタンのテキストを更新
+                    if (data.is_liked) {
+                        likeButtonElement.textContent = 'いいね解除';
+                    } else {
+                        likeButtonElement.textContent = 'いいね';
+                    }
+                }
+            } else {
+                console.error('いいねの更新に失敗しました:', data);
+                alert('いいねの更新に失敗しました。');
+            }
+        })
+        .catch(error => {
+            console.error('通信エラー:', error);
+            alert('いいねの更新中にエラーが発生しました。');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. フォーム送信イベントの処理 (いいねボタン)
+        const likeForms = document.querySelectorAll('.like-form');
+        likeForms.forEach(form => {
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // フォームの通常の送信（ページリロード）をキャンセル
+                const postId = this.getAttribute('data-post-id');
+                if (postId) {
+                    toggleLike(postId);
+                }
+            });
+        });
+
+        // 2. 画像ダブルクリックイベントの処理 (既存の処理をAjaxに変更)
+        const postImages = document.querySelectorAll('[id^="post-image-"]');
         postImages.forEach(image => {
             image.addEventListener('dblclick', function() {
-                // post-idを取得
                 const postId = this.getAttribute('data-post-id');
-                
                 if (postId) {
-                    // 対応する「いいね」フォームを見つけて送信
-                    const likeForm = document.getElementById('like-form-' + postId);
-                    if (likeForm) {
-                        // フォームを送信して「いいね」アクションを実行
-                        likeForm.submit();
-                    }
+                    toggleLike(postId);
                 }
             });
         });
     });
 </script>
 {% endif %}
-{% endblock content %}
