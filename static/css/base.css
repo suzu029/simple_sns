@@ -20,11 +20,16 @@ header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
 }
 
 header h1 {
     margin: 0;
     font-size: 1.8em;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
 }
 
 header a {
@@ -41,6 +46,9 @@ header a:hover {
 header p {
     margin: 0;
     font-size: 0.9em;
+    margin-left: auto;
+    z-index: 10;
+    position: relative;
 }
 
 /* mainコンテンツのレイアウト */

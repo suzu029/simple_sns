@@ -11,7 +11,8 @@
         <h1><a href="{% url 'post_list' %}">Simple SNS</a></h1>
         {% if user.is_authenticated %}
             <p>{{ user.username }} さん |
-               <a href="{% url 'login' %}">ログアウト</a></p>
+               <a href="{% url 'set_user_group' %}">グループ選択</a> |
+               <a href="{% url 'group_name_setting' %}">グループ名変更</a> | <a href="{% url 'logout' %}">ログアウト</a></p>
         {% else %}
             <p><a href="{% url 'login' %}">ログイン</a></p>
         {% endif %}

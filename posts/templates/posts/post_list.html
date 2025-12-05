@@ -3,18 +3,33 @@
 {% block content %}
   <h2>投稿一覧</h2>
 
+  {% if messages %}
+    <ul class="messages" style="list-style: none; padding: 0;">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color: green;">{{ message }}</li>
+        {% endfor %}
+    </ul>
+  {% endif %}
+
   <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 15px; background-color: #f9f9f9;">
     <p style="margin: 0; font-weight: bold;">全投稿のいいね総数 (グループ別)</p>
     <p style="margin: 5px 0 0 0;">
-      GroupA: <strong>{{ total_group_a_likes }}</strong> いいね
-      / GroupB: <strong>{{ total_group_b_likes }}</strong> いいね
+      {{ group_a_display_name }}: <strong>{{ total_group_a_likes }}</strong> いいね
+      / {{ group_b_display_name }}: <strong>{{ total_group_b_likes }}</strong> いいね
     </p>
   </div>
   <p>
     <a href="{% url 'post_create' %}" style="text-decoration:none;">
       📝 投稿
     </a>
-  </p>
+    <span style="margin: 0 10px;">|</span>
+   <!-- <a href="{% url 'set_user_group' %}" style="text-decoration:none;">
+      👥 グループ選択 
+    </a>
+    <span style="margin: 0 10px;">|</span>
+    <a href="{% url 'group_name_setting' %}" style="text-decoration:none;">
+      🖋️ グループ名変更 </a>
+  </p> -->
 
   {% for post in posts %}
     <div>

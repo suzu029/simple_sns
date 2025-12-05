@@ -9,7 +9,7 @@ class PostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'rows': 4}),
         }
 
-# ★ 新規追加: ユーザーグループ設定フォーム
+# ★ 既存のUserGroupFormは変更なし
 class UserGroupForm(forms.ModelForm):
     GROUP_CHOICES_LOGIN = [
         ('A', 'GroupA'),
@@ -26,3 +26,13 @@ class UserGroupForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ['associated_group']
+
+# ★新規追加: ユーザーがグループ名を設定するためのフォーム
+class GroupNameForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ['group_a_name', 'group_b_name']
+        labels = {
+            'group_a_name': 'グループAの表示名',
+            'group_b_name': 'グループBの表示名',
+        }

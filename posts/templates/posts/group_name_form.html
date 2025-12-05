@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h2>グループ名変更</h2>
+  <p>グループ名変更</p>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">グループ名を更新</button>
+  </form>
+
+  <p><a href="{% url 'post_list' %}">ホームに戻る</a></p>
+{% endblock content %}
