@@ -60,23 +60,13 @@ main {
 
 /* ★追加: 投稿コンテンツ全体のフォントサイズを大きくする */
 main > div {
-    font-size: 1.1em; /* 投稿全体の基本文字サイズを10%拡大 */
+    font-size: 1.4em; /* 投稿全体の基本文字サイズを10%拡大 */
     background-color: white;
     padding: 15px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* 画像のスタイル調整 */
-main > div img {
-    /* max-widthを100%にすることで、親要素（760px）に合わせて最大表示されます */
-    max-width: 30%; 
-    height: auto;
-    border-radius: 4px;
-    margin: 10px 0;
-    display: block;
 }
 
 
@@ -107,10 +97,4 @@ main > div p span {
     font-weight: bold;
     margin-left: 10px;
     color: #27ae60 !important; /* グループ名を濃い緑に */
-}
-
-
-main img {
-    max-width: 100% !important;
-    height: auto !important;
 }

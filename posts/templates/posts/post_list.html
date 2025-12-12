@@ -45,12 +45,11 @@
       </p>
       
       <p>{{ post.content }}</p>
-      {% if post.image %}
+{% if post.image %}
         <img src="{{ post.image.url }}"
              id="post-image-{{ post.id }}" 
              data-post-id="{{ post.id }}" 
-             style="cursor: pointer;">
-      {% endif %}
+             style="cursor: pointer; max-width: 100% !important; height: auto !important; width: 40% !important;"> {% endif %}
       <p>❤️ <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span> いいね</p>
 
       <form action="{% url 'like_post' post.id %}" method="post" class="like-form" data-post-id="{{ post.id }}" style="display: inline;">
