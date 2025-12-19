@@ -1,5 +1,3 @@
-# suzu029/simple_sns/simple_sns-980b52dbcc7f9528f8b8fcf88fa3333b1812607a/posts/views.py
-
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin 
@@ -7,11 +5,27 @@ from django.views.generic.edit import UpdateView
 from django.urls import reverse_lazy 
 from django.contrib import messages 
 
-from django.http import JsonResponse # ★追加
-from django.views.decorators.http import require_POST # ★追加
+from django.http import JsonResponse 
+from django.views.decorators.http import require_POST 
 
 from .models import Post, UserProfile 
 from .forms import PostForm, UserGroupForm, GroupNameForm 
+
+# ★追加/変更: グループ別いいね総数を集計するヘルパー関数
+def calculate_total_likes_by_group():
+    """全投稿のグループ別いいね総数を計算する"""
+    posts = Post.objects.all() 
+    total_group_a_likes = 0
+    total_group_b_likes = 0
+    
+    for post in posts:
+        post_likes = post.total_likes()
+        if post.associated_group == 'A':
+            total_group_a_likes += post_likes
+        elif post.associated_group == 'B':
+            total_group_b_likes += post_likes
+            
+    return total_group_a_likes, total_group_b_likes
 
 
 # ----------------------------------------------------
@@ -22,6 +36,7 @@ def group_name_setting_view(request):
     try:
         user_profile = request.user.userprofile
     except UserProfile.DoesNotExist:
+        # UserProfileが存在しない場合は作成してリダイレクト
         UserProfile.objects.create(user=request.user)
         return redirect('group_name_setting')
 
@@ -38,21 +53,13 @@ def group_name_setting_view(request):
 
 
 # ----------------------------------------------------
-# 2. 投稿一覧関数 (post_list)
+# 2. 投稿一覧関数 (post_list) - ヘルパー関数を使用するように修正
 # ----------------------------------------------------
 def post_list(request):
     posts = Post.objects.all().order_by('-created_at')
     
     # --- グループ別いいね総数の集計 ---
-    total_group_a_likes = 0
-    total_group_b_likes = 0
-    
-    for post in posts:
-        if post.associated_group == 'A':
-            total_group_a_likes += post.total_likes()
-        elif post.associated_group == 'B':
-            total_group_b_likes += post.total_likes()
-            
+    total_group_a_likes, total_group_b_likes = calculate_total_likes_by_group()
     # ---------------------------------
     
     # ログインユーザーのカスタムグループ名を取得
@@ -64,6 +71,7 @@ def post_list(request):
             group_a_display_name = user_profile.group_a_name
             group_b_display_name = user_profile.group_b_name
         except UserProfile.DoesNotExist:
+            # UserProfileが存在しない場合はデフォルト名のまま (Post側で対応)
             pass
 
 
@@ -116,6 +124,7 @@ class SetUserGroupView(LoginRequiredMixin, UpdateView):
         try:
             return self.request.user.userprofile
         except UserProfile.DoesNotExist:
+            # UserProfileが存在しない場合は作成
             return UserProfile.objects.create(user=self.request.user, associated_group='N')
             
     def form_valid(self, form):
@@ -143,10 +152,16 @@ def like_post(request, post_id):
 
     new_total_likes = post.total_likes()
     
+    # ★追加: 全体のいいね総数を再計算
+    total_group_a_likes, total_group_b_likes = calculate_total_likes_by_group()
+    
     return JsonResponse({
         'status': 'ok',
         'post_id': post_id,
         'action': action,
         'total_likes': new_total_likes,
-        'is_liked': liked
+        'is_liked': liked,
+        # ★追加: 全体の集計結果をレスポンスに含める
+        'total_group_a_likes': total_group_a_likes,
+        'total_group_b_likes': total_group_b_likes,
     })

@@ -22,13 +22,13 @@
     <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #e0e0e0; border-radius: 8px; background-color: #f9f9f9; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
         <h3 style="margin-top: 0; color: #1abc9c; font-size: 1.2em;">現在のいいね集計</h3>
         <p style="margin: 5px 0;">
-            <strong>全体総数:</strong> {{ total_group_a_likes | add:total_group_b_likes }} いいね
+            <strong>全体総数:</strong> <span id="total-all-likes">{{ total_group_a_likes | add:total_group_b_likes }}</span> いいね
         </p>
         <p style="margin: 5px 0; color: #3499db;">
-            <strong>{{ group_a_display_name }}:</strong> {{ total_group_a_likes }} いいね
+            <strong id="group-a-name-summary">{{ group_a_display_name }}</strong>: <span id="total-group-a-likes">{{ total_group_a_likes }}</span> いいね
         </p>
         <p style="margin: 5px 0; color: #e74c3c;">
-            <strong>{{ group_b_display_name }}:</strong> {{ total_group_b_likes }} いいね
+            <strong id="group-b-name-summary">{{ group_b_display_name }}</strong>: <span id="total-group-b-likes">{{ total_group_b_likes }}</span> いいね
         </p>
     </div>
     {% endif %}
@@ -49,7 +49,7 @@
         <img src="{{ post.image.url }}"
              id="post-image-{{ post.id }}" 
              data-post-id="{{ post.id }}" 
-             style="cursor: pointer; max-width: 100% !important; height: auto !important; width: 40% !important;"> {% endif %}
+             style="cursor: pointer; max-width: 100% !important; height: auto !important; width: 100% !important;"> {% endif %}
       <p>❤️ <span id="like-count-{{ post.id }}">{{ post.total_likes }}</span> いいね</p>
 
       <form action="{% url 'like_post' post.id %}" method="post" class="like-form" data-post-id="{{ post.id }}" style="display: inline;">
@@ -106,7 +106,7 @@
         })
         .then(data => {
             if (data.status === 'ok') {
-                // DOMを更新
+                // 1. 個別のいいね数を更新
                 const likeCountElement = document.getElementById(`like-count-${postId}`);
                 const likeButtonElement = document.getElementById(`like-button-${postId}`);
                 
@@ -122,10 +122,23 @@
                         likeButtonElement.textContent = 'いいね';
                     }
                 }
-                // ★追加: 集計値を再取得するためにページをリロードする代わりに、
-                // 非同期でページ上の集計部分を更新するロジックをここに追加できますが、
-                // 今回はシンプルにページ上部のいいね総数表示を更新する機能は省略します。
-                // （本格的な更新はページリロードなしでは複雑になるため）
+
+                // 2. 全体のいいね集計を更新
+                const totalGroupA = document.getElementById('total-group-a-likes');
+                const totalGroupB = document.getElementById('total-group-b-likes');
+                const totalAll = document.getElementById('total-all-likes');
+
+                if (totalGroupA && data.total_group_a_likes !== undefined) {
+                    totalGroupA.textContent = data.total_group_a_likes;
+                }
+                if (totalGroupB && data.total_group_b_likes !== undefined) {
+                    totalGroupB.textContent = data.total_group_b_likes;
+                }
+                if (totalAll && data.total_group_a_likes !== undefined && data.total_group_b_likes !== undefined) {
+                    // JavaScriptで足し算を実行して全体総数を更新
+                    totalAll.textContent = data.total_group_a_likes + data.total_group_b_likes;
+                }
+                
             } else {
                 console.error('いいねの更新に失敗しました:', data);
                 alert('いいねの更新に失敗しました。');
