@@ -1,6 +1,4 @@
-/* base.css */
-
-/* 基本リセットとグローバルスタイル */
+/* --- 基本設定 --- */
 body {
     font-family: 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', Meiryo, Arial, sans-serif;
     margin: 0;
@@ -9,7 +7,6 @@ body {
     color: #333;
 }
 
-/* ヘッダーのスタイリング */
 header {
     background-color: #1abc9c;
     color: white;
@@ -29,72 +26,86 @@ header h1 {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-
 }
 
-header a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
-}
+header a { color: white; text-decoration: none; }
+header p { margin: 0; font-size: 0.9em; margin-left: auto; z-index: 10; position: relative; }
 
-header a:hover {
-    color: #ecf0f1;
-}
-
-/* ユーザー情報/ログインリンクを含むpタグ */
-header p {
-    margin: 0;
-    font-size: 0.9em;
-    margin-left: auto;
-    z-index: 10;
-    position: relative;
-}
-
-/* mainコンテンツのレイアウト */
 main {
-    max-width: 600px; /* コンテンツ幅を制限 */
+    max-width: 600px;
     margin: 0 auto;
     padding: 0 15px;
 }
 
-/* ★追加: 投稿コンテンツ全体のフォントサイズを大きくする */
-main > div {
-    font-size: 1.4em; /* 投稿全体の基本文字サイズを10%拡大 */
+/* --- 投稿一覧のデザイン --- */
+.post-item {
     background-color: white;
-    padding: 15px;
+    padding: 20px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
     margin-bottom: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    font-size: 1.2em;
 }
 
+.post-item strong { color: #1abc9c; }
 
-
-/* ユーザー名のフォントサイズを調整 */
-main > div strong {
-    font-size: 1.1em; 
-    color: #1abc9c;
+.post-image {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 10px 0;
 }
 
-/* いいね、解除ボタンのスタイル（このコードは以前の回答から変更なし） */
-main > div button {
-    background-color: #3498db;
+/* --- フォーム・設定画面 (グループ選択・変更・ログイン共通) --- */
+.card-container {
+    background-color: white;
+    padding: 30px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    margin-top: 20px;
+}
+
+h2 {
+    color: #2c3e50;
+    border-left: 5px solid #1abc9c;
+    padding-left: 12px;
+    margin-bottom: 20px;
+}
+
+form p { margin-bottom: 15px; }
+
+input[type="text"], input[type="password"], select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+/* ボタン共通 */
+button[type="submit"], .btn-action {
+    background-color: #1abc9c;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 12px 20px;
     border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-main > div button:hover {
-    background-color: #2980b9;
-}
-
-main > div p span {
-    font-size: 1.1em !important; /* ユーザー名の文字サイズと同じくらいに拡大 */
+    font-size: 1em;
     font-weight: bold;
-    margin-left: 10px;
-    color: #27ae60 !important; /* グループ名を濃い緑に */
+    cursor: pointer;
+    width: 100%;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover { background-color: #16a085; }
+
+/* 統計情報のカード */
+.stats-card {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
 }

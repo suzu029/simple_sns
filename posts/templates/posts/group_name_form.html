@@ -1,14 +1,100 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+  /* 編集用コンテナ */
+  .edit-container {
+    max-width: 500px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  h2 {
+    color: #333;
+    font-size: 1.4rem;
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 15px;
+  }
+
+  /* フォームのラベル（as_p 内の label） */
+  form p label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #555;
+  }
+
+  /* 入力フィールド */
+  form input[type="text"],
+  form select,
+  form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+  }
+
+  form input:focus {
+    border-color: #0056b3; /* 更新系は安心感のある緑系もおすすめ */
+    outline: none;
+  }
+
+  /* 更新ボタン */
+  .btn-submit {
+    width: 100%;
+    padding: 14px;
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+  }
+
+  .btn-submit:hover {
+    background-color: #0056b3;
+  }
+
+  /* 戻るリンクの装飾 */
+  .back-link-container {
+    margin-top: 20px;
+    text-align: center;
+  }
+
+  .back-link {
+    color: #6c757d;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+
+  .back-link:hover {
+    text-decoration: underline;
+  }
+</style>
+
+<div class="edit-container">
   <h2>グループ名変更</h2>
-  <p>グループ名変更</p>
 
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">グループ名を更新</button>
+    <button type="submit" class="btn-submit">グループ名を更新</button>
   </form>
 
-  <p><a href="{% url 'post_list' %}">ホームに戻る</a></p>
+  <div class="back-link-container">
+    <p><a href="{% url 'post_list' %}" class="back-link">← ホームに戻る</a></p>
+  </div>
+</div>
 {% endblock content %}

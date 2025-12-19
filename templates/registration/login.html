@@ -1,15 +1,102 @@
 {% extends "base.html" %}
+
 {% block content %}
+<style>
+  /* ログイン用コンテナ */
+  .login-container {
+    max-width: 400px;
+    margin: 60px auto;
+    padding: 40px 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+  }
+
+  h2 {
+    color: #333;
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+    text-align: center;
+    font-weight: 700;
+  }
+
+  form p {
+    margin-bottom: 20px;
+  }
+
+  form label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+  }
+
+  form input[type="text"],
+  form input[type="password"],
+  form input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    background-color: #fdfdfd;
+  }
+
+  form input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    outline: none;
+    background-color: #fff;
+  }
+
+  .btn-login {
+    width: 100%;
+    padding: 14px;
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s;
+  }
+
+  .btn-login:hover {
+    background-color: #357abd;
+  }
+
+  .errorlist {
+    color: #dc3545;
+    padding: 0;
+    list-style: none;
+    font-size: 0.85rem;
+    margin-bottom: 15px;
+    text-align: left;
+  }
+</style>
+
+<div class="login-container">
   <h2>ログイン</h2>
+  
   <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">ログイン</button>
+    <button type="submit" class="btn-login">ログイン</button>
   </form>
 
   {% comment %}
-  <p>まだアカウントをお持ちでない場合は
-    <a href="{% url 'signup' %}">新規登録</a>
-  </p>
+  <div style="margin-top: 25px; text-align: center; border-top: 1px solid #eee; padding-top: 20px;">
+    <p style="font-size: 0.9rem; color: #666;">
+      まだアカウントをお持ちでない場合は
+      <a href="{% url 'signup' %}" style="color: #4a90e2; text-decoration: none; font-weight: bold;">新規登録</a>
+    </p>
+  </div>
   {% endcomment %}
+</div>
 {% endblock %}

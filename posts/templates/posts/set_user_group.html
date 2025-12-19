@@ -1,6 +1,82 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+  /* コンテナ全体のスタイル */
+  .selection-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    text-align: center;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+  }
+
+  p {
+    color: #666;
+    margin-bottom: 25px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  /* Djangoのform.as_pに対するスタイル */
+  form p {
+    text-align: left; /* ラベルと入力欄は左寄せ */
+    margin-bottom: 20px;
+  }
+
+  /* セレクトボックスや入力欄の共通スタイル */
+  form select, 
+  form input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box; /* 幅の計算を正確にする */
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+  }
+
+  form select:focus {
+    border-color: #007bff;
+    outline: none;
+    background-color: #fff;
+  }
+
+  /* ボタンのスタイル */
+  button[type="submit"] {
+    width: 100%;
+    padding: 14px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0056b3;
+  }
+
+  button[type="submit"]:active {
+    transform: scale(0.98);
+  }
+</style>
+
+<div class="selection-container">
   <h2>グループ選択</h2>
   
   <p>投稿を作成する前に、あなたの所属するグループを選択してください。</p>
@@ -10,4 +86,5 @@
     {{ form.as_p }}
     <button type="submit">グループを決定</button>
   </form>
+</div>
 {% endblock %}
